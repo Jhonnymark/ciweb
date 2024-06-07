@@ -14,7 +14,7 @@ class Login_model extends CI_Model
      $store_password = $this->encryption->decrypt($row->password);
      if($password == $store_password)
      {
-      $this->session->set_userdata('id', $row->id);
+      $this->session->set_userdata('user_id', $row->user_id);
      }
      else
      {

@@ -27,10 +27,9 @@
 <h2 class="text-center mt-5 mb-3"><?php echo $title; ?></h2>
 <div class="card">
     <div class="card-header">
-        <a class="btn btn-outline-primary" href="<?php echo base_url('index.php/project/create/');?>"> 
-            Create New Project
+        <a class="btn btn-outline-primary" href="<?php echo base_url('index.php/products/add_product/');?>"> 
+            Add New Product
         </a>
-        <a href="<?php echo base_url('index.php/project/logout'); ?>">Logout</a>
     </div>
     <div class="card-body">
         <?php if ($this->session->flashdata('success')) {?>
@@ -42,32 +41,30 @@
         <table id="projectTable" class="table table-bordered">
             <thead>
             <tr>
-                <th>Name</th>
+                <th>Product Name</th>
                 <th>Description</th>
-
+                <th>Price</th>
+                <th>Stocks</th>
                 <th>Image</th>
                 <th width="240px">Action</th>
             </tr>
         </thead>
-            <?php foreach ($projects as $project) { ?>      
+            <?php foreach ($products as $product) { ?>      
             <tr>
-                <td><?php echo $project->name; ?></td>
-                <td><?php echo $project->description; ?></td> 
-                <td><img src="<?php echo '../images/'.$project->image; ?>" style=" width: 50px; height; 50px;"></td>     
+                <td><?php echo $product->prod_name; ?></td>
+                <td><?php echo $product->prod_desc; ?></td> 
+                <td><?php echo $product->price; ?></td>
+                <td><?php echo $product->stock; ?></td> 
+                <td><img src="<?php echo '../images/'.$product->image; ?>" style=" width: 50px; height; 50px;"></td>     
                         
                 <td>
                     <a
-                        class="btn btn-outline-info"
-                        href="<?php echo base_url('index.php/project/show/'. $project->id) ?>"> 
-                        Show
-                    </a>
-                    <a
                         class="btn btn-outline-success"
-                        href="<?php echo base_url('index.php/project/edit/'.$project->id) ?>"> 
+                        href="<?php echo base_url('index.php/products/edit_product/'.$product->product_id) ?>"> 
                         Edit
                     </a>
                     
-                    <a class="btn btn-outline-danger" href="#" onclick="confirmDelete('<?php echo base_url('index.php/project/delete/' . $project->id); ?>')">
+                    <a class="btn btn-outline-danger" href="#" onclick="confirmDelete('<?php echo base_url('index.php/products/delete/' . $product->product_id); ?>')">
                         Delete
                  </a>
                  <script>
@@ -77,10 +74,8 @@
             $('#projectTable').DataTable({
                 "paging": true,
                 "searching": true,
-                "pageLength": 2,
+                "pageLength": 15,
                 "lenghtMenu":[1,2,3,5,10],
-                "dom": 'lBftrip',
-                "buttons":['copy','csv','excel','pdf','print']
             });
         }
     });

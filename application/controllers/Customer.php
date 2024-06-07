@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Project extends CI_Controller {
+class Customer extends CI_Controller {
 
    public function __construct() {
       parent::__construct(); 
@@ -10,40 +10,40 @@ class Project extends CI_Controller {
       }
       $this->load->library('form_validation');
       $this->load->library('session');
-      $this->load->model('Project_model', 'project');
+      $this->load->model('Customer_model', 'customer');
    }
 
    /*
       Display all records in page
    */
    public function index() {
-      $data['projects'] = $this->project->get_all();
-      $data['title'] = "CodeIgniter Project Manager";
-      $this->load->view('layout/header');       
-      $this->load->view('project/index', $data);
+      $data['products'] = $this->customer->get_all();
+      $data['title'] = "Products";    
+      $this->load->view('customer/index', $data);
       $this->load->view('layout/footer');
    }
 
    /*
       Display a record
    */
-   public function show($id) {
-      $data['project'] = $this->project->get($id);
-      $data['title'] = "Show Project";
-      $this->load->view('layout/header');
-      $this->load->view('project/show', $data);
-      $this->load->view('layout/footer'); 
-   }
+  public function details($product_id) {
+   $data['product'] = $this->customer->get_product($product_id);
+   $data['title'] = 'Product Details';
+   
+   $this->load->view('customer/details', $data);
+
+}
 
    /*
       Create a record page
    */
-   public function create() {
-      $data['title'] = "Create Project";
-      $this->load->view('layout/header');
-      $this->load->view('project/create', $data);
-      $this->load->view('layout/footer');     
-   }
+  public function add_product() {
+   $data['title'] = "Add Products";
+   $data['category'] = $this->products->get_categories(); // Assuming you have a method to fetch categories in your Product_model
+   $this->load->view('layout/header');
+   $this->load->view('products/add_product', $data);
+   $this->load->view('layout/footer');     
+}
 
    /*
       Save the submitted record
@@ -59,8 +59,11 @@ class Project extends CI_Controller {
 
       $this->load->library('upload', $config);
 
-      $this->form_validation->set_rules('name', 'Name', 'required');
-      $this->form_validation->set_rules('description', 'Description', 'required');
+      $this->form_validation->set_rules('prod_name', 'prod_name', 'required');
+      $this->form_validation->set_rules('prod_desc', 'prod_desc', 'required');
+      $this->form_validation->set_rules('price', 'price', 'required');
+      $this->form_validation->set_rules('stock', 'stock', 'required');
+      $this->form_validation->set_rules('cat_id', 'cat_id', 'required');
 
       if (!$this->form_validation->run()) {
          //$this->session->set_flashdata('errors', validation_errors());
@@ -78,13 +81,13 @@ class Project extends CI_Controller {
          ];
       } else {
          $file_name = $this->upload->data('file_name');
-         $this->project->store($file_name);
+         $this->products->store($file_name);
          //$this->session->set_flashdata('success', "Saved Successfully!");
          //redirect(base_url('index.php/project'));
          $response = [
             'status' => 'success',
             'message'=> 'Save Successfully!',
-            'redirect' => base_url('index.php/project')
+            'redirect' => base_url('index.php/products')
          ];
       }
    echo json_encode($response);
@@ -93,11 +96,11 @@ class Project extends CI_Controller {
    /*
       Edit a record page
    */
-   public function edit($id) {
-      $data['project'] = $this->project->get($id);
-      $data['title'] = "Edit Project";
+   public function edit_product($id) {
+      $data['products'] = $this->products->get($id);
+      $data['title'] = "Edit Products";
       $this->load->view('layout/header');
-      $this->load->view('project/edit', $data);
+      $this->load->view('products/edit_product', $data);
       $this->load->view('layout/footer');     
    }
 
@@ -113,20 +116,23 @@ class Project extends CI_Controller {
 
       $this->load->library('upload', $config);
 
-      $this->form_validation->set_rules('name', 'Name', 'required');
-      $this->form_validation->set_rules('description', 'Description', 'required');
+      $this->form_validation->set_rules('prod_name', 'prod_name', 'required');
+      $this->form_validation->set_rules('prod_desc', 'prod_desc', 'required');
+      $this->form_validation->set_rules('price', 'price', 'required');
+      $this->form_validation->set_rules('stock', 'stock', 'required');
+
 
       if (!$this->form_validation->run()) {
          $this->session->set_flashdata('errors', validation_errors());
-         redirect(base_url('index.php/project/edit/' . $id));
+         redirect(base_url('index.php/products/edit_product/' . $id));
       } else if (!$this->upload->do_upload('image')) {
          $this->session->set_flashdata('errors', $this->upload->display_errors()); 
-         redirect(base_url('index.php/project/edit/' . $id));
+         redirect(base_url('index.php/products/edit_product/' . $id));
       } else {
          $file_name = $this->upload->data('file_name');
-         $this->project->update($id, $file_name);
+         $this->products->update($id, $file_name);
          $this->session->set_flashdata('success', "Updated Successfully!");
-         redirect(base_url('index.php/project'));
+         redirect(base_url('index.php/products'));
       }
    }
 
@@ -134,9 +140,9 @@ class Project extends CI_Controller {
       Delete a record
    */
    public function delete($id) {
-      $item = $this->project->delete($id);
+      $item = $this->products->delete($id);
       $this->session->set_flashdata('success', "Deleted Successfully!");
-      redirect(base_url('index.php/project'));
+      redirect(base_url('index.php/products'));
    }
 
    /*
@@ -150,3 +156,4 @@ class Project extends CI_Controller {
       redirect(base_url('index.php/login'));
    }
 }
+

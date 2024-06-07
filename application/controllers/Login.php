@@ -6,9 +6,9 @@ class Login extends CI_Controller {
  public function __construct()
  {
   parent::__construct();
-  if($this->session->userdata('id'))
+  if($this->session->userdata('user_id'))
   {
-   redirect('project');
+   redirect('products');
   }
   $this->load->library('form_validation');
   $this->load->library('encryption');
@@ -29,7 +29,7 @@ class Login extends CI_Controller {
    $result = $this->login_model->can_login($this->input->post('user_email'), $this->input->post('user_password'));
    if($result == '')
    {
-    redirect('project');
+    redirect('products');
    }
    else
    {

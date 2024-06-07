@@ -132,6 +132,6 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('Project_model');
+$autoload['model'] = array('Product_model');
 $autoload['libraries'] = array('session');
 $autoload['helper'] = array('url','form');
